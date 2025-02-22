@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "589798806704",
+    "project_id": "leveling-arp",
+    "storage_bucket": "leveling-arp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:589798806704:android:143f0ee2a6519b3d96d775",
+        "android_client_info": {
+          "package_name": "com.example.leveling"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUZQqDJR3UX8_Ksb28PmmUNPl9FukkiiQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
