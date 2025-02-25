@@ -17,6 +17,8 @@ val onTertiary = Color(0xFFFFFFFF)
 val outline = Color(0xFF508DE0)
 val outlineVariant = Color(0xFFFFFFFF)
 
+val success = Color(0xFF006600)
+
 val error = Color(0xFFFF0000)
 val onError = Color(0xFFFFFFFF)
 

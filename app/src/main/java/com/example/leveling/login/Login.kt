@@ -39,12 +39,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.leveling.content.quest.dailyReset
+import com.example.leveling.content.quest.isNewDay
 import com.example.leveling.ui.theme.loginBackground
 import com.example.leveling.ui.theme.secondary
 import com.example.leveling.ui.theme.secondaryLight
 import com.example.leveling.ui.theme.tertiary
 import com.example.leveling.ui.theme.tertiaryLight
 import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 
 //login
@@ -52,6 +55,7 @@ import com.google.firebase.firestore.firestore
 fun LoginMethod(navControllerSecondary: NavHostController, navControllerLogin: NavHostController) {
     val googleAuthClient = LoginGoogleClient(LocalContext.current)
     val context = LocalContext.current
+
 
     var isSignInRequested by remember { mutableStateOf(false) }
 
@@ -61,6 +65,15 @@ fun LoginMethod(navControllerSecondary: NavHostController, navControllerLogin: N
             val isSignInSuccesfully = googleAuthClient.signIn()
 
             if (isSignInSuccesfully) {
+                val user = Firebase.auth.currentUser
+                user?.let {
+                    val userid = it.uid
+
+                    if (isNewDay(context)) {
+                        dailyReset(userid)
+                    }
+                }
+
                 navControllerSecondary.navigate("main") {popUpTo("login") { inclusive = true }}
             } else {
                 Toast.makeText(context, "Sign in with Google failed", Toast.LENGTH_SHORT).show()
@@ -122,7 +135,6 @@ fun LoginMethod(navControllerSecondary: NavHostController, navControllerLogin: N
 
 @Composable
 fun SignIn(navControllerSecondary: NavHostController, navControllerLogin: NavHostController, authViewModel: LoginViewModel) {
-    val db = Firebase.firestore
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -133,6 +145,15 @@ fun SignIn(navControllerSecondary: NavHostController, navControllerLogin: NavHos
     LaunchedEffect(authState.value) {
         when (authState.value) {
             is AuthState.Authenticated -> {
+                val user = Firebase.auth.currentUser
+                user?.let {
+                    val userid = it.uid
+
+                    if (isNewDay(context)) {
+                        dailyReset(userid)
+                    }
+                }
+
                 navControllerSecondary.navigate("main") {
                     popUpTo("login") { inclusive = true }
                 }
@@ -227,6 +248,15 @@ fun SignUp(navControllerSecondary: NavHostController, navControllerLogin: NavHos
     LaunchedEffect(authState.value) {
         when (authState.value) {
             is AuthState.Authenticated -> {
+                val user = Firebase.auth.currentUser
+                user?.let {
+                    val userid = it.uid
+
+                    if (isNewDay(context)) {
+                        dailyReset(userid)
+                    }
+                }
+
                 navControllerSecondary.navigate("main") {
                     popUpTo("login") { inclusive = true }
                 }

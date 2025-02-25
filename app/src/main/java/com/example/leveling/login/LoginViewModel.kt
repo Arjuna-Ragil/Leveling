@@ -1,10 +1,12 @@
 package com.example.leveling.login
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.ui.graphics.evaluateY
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.leveling.content.quest.isNewDay
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -58,6 +60,7 @@ class LoginViewModel: ViewModel() {
                                         "profilePic" to it.photoUrl.toString(),
                                         "level" to 1,
                                         "xp" to 0,
+                                        "money" to 0,
                                         "createdAt" to FieldValue.serverTimestamp()
                                     )
 
@@ -110,6 +113,7 @@ class LoginViewModel: ViewModel() {
                                         "profilePic" to it.photoUrl.toString(),
                                         "level" to 1,
                                         "xp" to 0,
+                                        "money" to 0,
                                         "createdAt" to FieldValue.serverTimestamp()
                                     )
 

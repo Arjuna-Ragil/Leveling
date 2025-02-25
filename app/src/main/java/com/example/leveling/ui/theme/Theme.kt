@@ -20,6 +20,7 @@ private val DarkColorScheme = darkColorScheme(
     onTertiary = onTertiary,
     outline = outline,
     outlineVariant = outlineVariant,
+    surfaceDim = success,
     error = error,
     surface = surface,
     onSurface = onSurface,

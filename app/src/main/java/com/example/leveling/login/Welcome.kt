@@ -32,8 +32,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.leveling.R
+import com.example.leveling.content.quest.dailyReset
+import com.example.leveling.content.quest.isNewDay
 import com.example.leveling.ui.theme.background
 import com.example.leveling.ui.theme.loginBackground
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 //Welcome Screen
 @Composable
@@ -249,7 +253,18 @@ fun Welcome(navControllerSecondary: NavController, authViewModel: LoginViewModel
 
     LaunchedEffect(authState.value) {
         when (authState.value) {
-            is AuthState.Authenticated -> navControllerSecondary.navigate("main"){popUpTo("welcome") { inclusive = true }}
+            is AuthState.Authenticated -> {
+                val user = Firebase.auth.currentUser
+                user?.let {
+                    val userid = it.uid
+
+                    if (isNewDay(context)) {
+                        dailyReset(userid)
+                    }
+                }
+
+                navControllerSecondary.navigate("main"){popUpTo("welcome") { inclusive = true }}
+            }
             is AuthState.Error -> Toast.makeText(context, (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT).show()
             else -> Unit
         }

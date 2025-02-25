@@ -32,7 +32,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.leveling.content.Home
+import com.example.leveling.content.home.Home
 import com.example.leveling.content.Profile
 import com.example.leveling.content.quest.Quest
 import com.example.leveling.content.Setting

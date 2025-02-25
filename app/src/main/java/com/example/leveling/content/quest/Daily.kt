@@ -1,10 +1,12 @@
 package com.example.leveling.content.quest
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,22 +31,50 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.example.leveling.main.QuestContentTop
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.time.delay
 
 @Composable
 fun Daily(navControllerMain: NavController) {
+    val db = Firebase.firestore
+    val todo = remember { mutableStateOf<List<QuestCardContent>>(emptyList()) }
+    val user = FirebaseAuth.getInstance().currentUser
 
-    var addDaily by remember { mutableStateOf("") }
-    var toDo by remember { mutableStateOf(listOf<String>()) }
+    var showDialog by remember { mutableStateOf(false) }
 
     val currentTime = remember { mutableStateOf(getCurrentTime()) }
     val currentDate = remember { mutableStateOf(getCurrentDate()) }
+
+    user?.let {
+        val userId = it.uid
+
+        LaunchedEffect(Unit) {
+            db.collection("Users").document(userId)
+                .collection("Quest")
+                .get()
+                .addOnSuccessListener { document ->
+                    todo.value = document.map { val quest = it.toObject(QuestCardContent::class.java)
+                        quest.id = it.id
+                        quest
+                    }
+                    Log.d("FireStore", "Daily Quest Retrieve: ${todo.value}")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("FireStore", "Failed to retrieve daily quest")
+                }
+        }
+    }
 
     LaunchedEffect(Unit) {
         while (true) {
@@ -58,7 +88,7 @@ fun Daily(navControllerMain: NavController) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val (topBar, date, list, input, add) = createRefs()
+        val (topBar, date, list, add) = createRefs()
 
         Box(
             modifier = Modifier
@@ -92,48 +122,36 @@ fun Daily(navControllerMain: NavController) {
             Text(text = currentTime.value)
         }
 
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
-                .background(MaterialTheme.colorScheme.primary)
-                .border(3.dp ,MaterialTheme.colorScheme.outline)
                 .constrainAs(list) {
                     top.linkTo(date.bottom)
-                    bottom.linkTo(input.top)
+                    bottom.linkTo(add.top)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     height = Dimension.fillToConstraints
                 }
         ) {
-            items(toDo) { toDo ->
-                Text(text = toDo)
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(5.dp),
+                contentPadding = PaddingValues(10.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(10.dp)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .border(3.dp ,MaterialTheme.colorScheme.outline)
+
+            ) {
+                items(todo.value) { toDo ->
+                    QuestCard(toDo)
+                }
             }
         }
 
-
-        TextField(
-            value = addDaily,
-            onValueChange = { addDaily = it},
-            placeholder = { Text(text = "Add Daily")},
-            modifier = Modifier
-                .padding(start = 10.dp)
-                .padding(vertical = 10.dp)
-                .fillMaxWidth(0.7f)
-                .border(3.dp, MaterialTheme.colorScheme.outline)
-                .constrainAs(input) {
-                    top.linkTo(list.bottom)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                }
-        )
-
         Button(
             onClick = {
-                if (addDaily.isNotBlank()) {
-                toDo = toDo + addDaily
-                addDaily = ""
-                    }
+                showDialog = true
             },
             shape = RectangleShape,
             modifier = Modifier
@@ -147,6 +165,20 @@ fun Daily(navControllerMain: NavController) {
                 }
         ) {
             Text(text = "Add")
+        }
+
+        user?.let {
+            val userId = it.uid
+
+            AddQuestDialog(
+                showDialog = showDialog,
+                onDismiss = { showDialog = false},
+                onAdd = { title, description, reward, done ->
+                    addDailyToFirestore(userId, title, description, reward, done) { newQuest ->
+                        todo.value += newQuest
+                    }
+                }
+            )
         }
     }
 }
