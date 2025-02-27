@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.googleid)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
+    implementation(libs.coil.compose)
     testImplementation(libs.junit)
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)

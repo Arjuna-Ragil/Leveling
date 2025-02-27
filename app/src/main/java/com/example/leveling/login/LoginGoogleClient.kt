@@ -83,7 +83,7 @@ class LoginGoogleClient(
                                     "email" to it.email,
                                     "profilePic" to it.photoUrl.toString(),
                                     "level" to 1,
-                                    "xp" to 0,
+                                    "exp" to 0,
                                     "money" to 0,
                                     "createdAt" to FieldValue.serverTimestamp()
                                 )

@@ -61,7 +61,7 @@ fun Quest(navControllerMain: NavController) {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.daily),
-                    contentDescription = "Quest",
+                    contentDescription = "Daily",
                     modifier = Modifier
                         .fillMaxWidth()
                         .graphicsLayer(
@@ -87,7 +87,7 @@ fun Quest(navControllerMain: NavController) {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.weekly),
-                    contentDescription = "Quest",
+                    contentDescription = "Weekly",
                     modifier = Modifier
                         .fillMaxWidth()
                         .graphicsLayer(
@@ -113,7 +113,7 @@ fun Quest(navControllerMain: NavController) {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.monthlyearly),
-                    contentDescription = "Quest",
+                    contentDescription = "Monthly and Yearly",
                     modifier = Modifier
                         .fillMaxWidth()
                         .graphicsLayer(

@@ -1,4 +1,4 @@
-package com.example.leveling.content.quest
+package com.example.leveling.content.quest.weekly
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -7,22 +7,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,22 +23,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
+import com.example.leveling.content.quest.QuestCardContent
+import com.example.leveling.content.quest.addDailyToFirestore
+import com.example.leveling.content.quest.addWeeklyToFirestore
+import com.example.leveling.content.quest.daily.AddQuestDialog
+import com.example.leveling.content.quest.daily.DailyQuestCard
+import com.example.leveling.content.quest.getCurrentDate
+import com.example.leveling.content.quest.getCurrentTime
 import com.example.leveling.main.QuestContentTop
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.toObject
-import kotlinx.coroutines.time.delay
 
 @Composable
-fun Daily(navControllerMain: NavController) {
+fun Weekly(navControllerMain: NavController) {
     val db = Firebase.firestore
     val todo = remember { mutableStateOf<List<QuestCardContent>>(emptyList()) }
     val user = FirebaseAuth.getInstance().currentUser
@@ -61,17 +56,17 @@ fun Daily(navControllerMain: NavController) {
 
         LaunchedEffect(Unit) {
             db.collection("Users").document(userId)
-                .collection("Quest")
+                .collection("Weekly")
                 .get()
                 .addOnSuccessListener { document ->
                     todo.value = document.map { val quest = it.toObject(QuestCardContent::class.java)
                         quest.id = it.id
                         quest
                     }
-                    Log.d("FireStore", "Daily Quest Retrieve: ${todo.value}")
+                    Log.d("FireStore", "Weekly Quest Retrieve: ${todo.value}")
                 }
                 .addOnFailureListener { e ->
-                    Log.e("FireStore", "Failed to retrieve daily quest")
+                    Log.e("FireStore", "Failed to retrieve weekly quest")
                 }
         }
     }
@@ -144,18 +139,19 @@ fun Daily(navControllerMain: NavController) {
 
             ) {
                 items(todo.value) { toDo ->
-                    QuestCard(toDo)
+                    WeeklyQuestCard(toDo)
                 }
             }
         }
 
         Button(
             onClick = {
-                showDialog = true
+                navControllerMain.navigate("weeklymodify")
             },
             shape = RectangleShape,
             modifier = Modifier
-                .padding(end = 10.dp)
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
                 .padding(vertical = 10.dp)
                 .border(3.dp, MaterialTheme.colorScheme.outline)
                 .constrainAs(add) {
@@ -164,21 +160,7 @@ fun Daily(navControllerMain: NavController) {
                     end.linkTo(parent.end)
                 }
         ) {
-            Text(text = "Add")
-        }
-
-        user?.let {
-            val userId = it.uid
-
-            AddQuestDialog(
-                showDialog = showDialog,
-                onDismiss = { showDialog = false},
-                onAdd = { title, description, reward, done ->
-                    addDailyToFirestore(userId, title, description, reward, done) { newQuest ->
-                        todo.value += newQuest
-                    }
-                }
-            )
+            Text(text = "Modify")
         }
     }
 }

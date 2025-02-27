@@ -37,9 +37,12 @@ import com.example.leveling.content.Profile
 import com.example.leveling.content.quest.Quest
 import com.example.leveling.content.Setting
 import com.example.leveling.content.Shop
-import com.example.leveling.content.quest.Daily
-import com.example.leveling.content.quest.Monthlyearly
-import com.example.leveling.content.quest.Weekly
+import com.example.leveling.content.quest.daily.Daily
+import com.example.leveling.content.quest.daily.ModifyDaily
+import com.example.leveling.content.quest.monthlyearly.ModifyMonthlyearly
+import com.example.leveling.content.quest.monthlyearly.Monthlyearly
+import com.example.leveling.content.quest.weekly.ModifyWeekly
+import com.example.leveling.content.quest.weekly.Weekly
 import com.example.leveling.login.LoginViewModel
 import com.example.leveling.ui.theme.background
 
@@ -136,12 +139,15 @@ fun NavBar(navControllerSecondary: NavController) {
                 .padding(it)
         ) {
             NavHost(navController = navControllerMain, startDestination = "Home") {
-                composable("home") { Home(navControllerSecondary, LoginViewModel()) }
+                composable("home") { Home(navControllerSecondary, navControllerMain,LoginViewModel()) }
                 composable("profile") { Profile() }
                 composable("quest") { Quest(navControllerMain) }
                 composable("daily") { Daily(navControllerMain) }
-                composable("weekly") { Weekly() }
-                composable("monthlyearly") { Monthlyearly() }
+                composable("dailymodify") { ModifyDaily(navControllerMain) }
+                composable("weekly") { Weekly(navControllerMain) }
+                composable("weeklymodify") { ModifyWeekly(navControllerMain) }
+                composable("monthlyearly") { Monthlyearly(navControllerMain) }
+                composable("monthlyearlymodify") { ModifyMonthlyearly(navControllerMain) }
                 composable("shop") { Shop() }
                 composable("setting") { Setting() }
             }

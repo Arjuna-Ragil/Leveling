@@ -1,8 +1,6 @@
 package com.example.leveling.content.home
 
 import android.util.Log
-import androidx.compose.animation.core.snap
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -34,14 +32,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import com.example.leveling.R
-import com.example.leveling.content.quest.QuestCard
+import coil.compose.AsyncImage
 import com.example.leveling.content.quest.QuestCardContent
+import com.example.leveling.content.quest.daily.DailyQuestCard
 import com.example.leveling.login.AuthState
 import com.example.leveling.login.LoginGoogleClient
 import com.example.leveling.login.LoginViewModel
@@ -52,7 +49,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 
 @Composable
-fun Home(navControllerSecondary: NavController, authViewModel: LoginViewModel) {
+fun Home(navControllerSecondary: NavController, navControllerMain: NavController,authViewModel: LoginViewModel) {
     val googleAuthClient = LoginGoogleClient(LocalContext.current)
 
     var isSignOutRequested by remember { mutableStateOf(false) }
@@ -84,7 +81,7 @@ fun Home(navControllerSecondary: NavController, authViewModel: LoginViewModel) {
 
         LaunchedEffect(Unit) {
             db.collection("Users").document(userId)
-                .collection("Quest")
+                .collection("Daily")
                 .get()
                 .addOnSuccessListener { document ->
                     todo.value = document.map { val quest = it.toObject(QuestCardContent::class.java)
@@ -107,7 +104,7 @@ fun Home(navControllerSecondary: NavController, authViewModel: LoginViewModel) {
                     if (snapshot != null && snapshot.exists()) {
                         gold = snapshot.getLong("money")?.toInt() ?: 0
                         level = snapshot.getLong("level")?.toInt() ?: 0
-                        name = snapshot.getLong("name")?.toString() ?: ""
+                        name = snapshot.getString("name") ?: ""
                         Log.d("FireStore", "Gold: $gold")
                     }
                 }
@@ -163,7 +160,6 @@ fun Home(navControllerSecondary: NavController, authViewModel: LoginViewModel) {
                             start.linkTo(quit.end)
                             end.linkTo(money.start)
                         }
-                        .padding(horizontal = 16.dp)
                 )
 
                 Text(
@@ -172,10 +168,9 @@ fun Home(navControllerSecondary: NavController, authViewModel: LoginViewModel) {
                         .constrainAs(money) {
                             top.linkTo(parent.top)
                             bottom.linkTo(parent.bottom)
-                            start.linkTo(title.end)
                             end.linkTo(parent.end)
                         }
-                        .padding(horizontal = 16.dp)
+                        .padding(horizontal = 20.dp)
                 )
             }
         }
@@ -187,19 +182,20 @@ fun Home(navControllerSecondary: NavController, authViewModel: LoginViewModel) {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo_leveling),
+            AsyncImage(
+                model = user?.photoUrl,
                 contentDescription = "Profile Picture",
                 modifier = Modifier
-                    .height(100.dp)
                     .width(100.dp)
+                    .height(100.dp)
                     .clip(CircleShape)
                     .border(2.dp, MaterialTheme.colorScheme.outline, CircleShape)
-                    .padding(10.dp)
             )
 
             Text(
-                text = if (name == "") "Guest" else name
+                text = if (name == "") "Guest" else name,
+                modifier = Modifier
+                    .padding(top = 10.dp)
             )
 
             Text(
@@ -235,7 +231,7 @@ fun Home(navControllerSecondary: NavController, authViewModel: LoginViewModel) {
                 )
             }
             items(todo.value) { toDo ->
-                QuestCard(toDo)
+                DailyQuestCard(navControllerMain,toDo)
             }
         }
     }

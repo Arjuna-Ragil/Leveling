@@ -32,8 +32,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.leveling.R
+import com.example.leveling.content.quest.WeeklyReset
 import com.example.leveling.content.quest.dailyReset
 import com.example.leveling.content.quest.isNewDay
+import com.example.leveling.content.quest.isNewMonthYear
+import com.example.leveling.content.quest.isNewWeek
+import com.example.leveling.content.quest.monthlyearlyReset
 import com.example.leveling.ui.theme.background
 import com.example.leveling.ui.theme.loginBackground
 import com.google.firebase.Firebase
@@ -260,6 +264,14 @@ fun Welcome(navControllerSecondary: NavController, authViewModel: LoginViewModel
 
                     if (isNewDay(context)) {
                         dailyReset(userid)
+                    }
+
+                    if (isNewWeek(context)) {
+                        WeeklyReset(userid)
+                    }
+
+                    if (isNewMonthYear(context)) {
+                        monthlyearlyReset(userid)
                     }
                 }
 

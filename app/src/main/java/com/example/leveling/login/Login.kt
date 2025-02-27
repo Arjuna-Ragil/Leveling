@@ -39,8 +39,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.leveling.content.quest.WeeklyReset
 import com.example.leveling.content.quest.dailyReset
 import com.example.leveling.content.quest.isNewDay
+import com.example.leveling.content.quest.isNewMonthYear
+import com.example.leveling.content.quest.isNewWeek
+import com.example.leveling.content.quest.monthlyearlyReset
 import com.example.leveling.ui.theme.loginBackground
 import com.example.leveling.ui.theme.secondary
 import com.example.leveling.ui.theme.secondaryLight
@@ -71,6 +75,14 @@ fun LoginMethod(navControllerSecondary: NavHostController, navControllerLogin: N
 
                     if (isNewDay(context)) {
                         dailyReset(userid)
+                    }
+
+                    if (isNewWeek(context)) {
+                        WeeklyReset(userid)
+                    }
+
+                    if (isNewMonthYear(context)) {
+                        monthlyearlyReset(userid)
                     }
                 }
 
@@ -151,6 +163,14 @@ fun SignIn(navControllerSecondary: NavHostController, navControllerLogin: NavHos
 
                     if (isNewDay(context)) {
                         dailyReset(userid)
+                    }
+
+                    if (isNewWeek(context)) {
+                        WeeklyReset(userid)
+                    }
+
+                    if (isNewMonthYear(context)) {
+                        monthlyearlyReset(userid)
                     }
                 }
 
@@ -254,6 +274,14 @@ fun SignUp(navControllerSecondary: NavHostController, navControllerLogin: NavHos
 
                     if (isNewDay(context)) {
                         dailyReset(userid)
+                    }
+
+                    if (isNewWeek(context)) {
+                        WeeklyReset(userid)
+                    }
+
+                    if (isNewMonthYear(context)) {
+                        monthlyearlyReset(userid)
                     }
                 }
 
