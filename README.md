@@ -33,6 +33,6 @@ Can be a single cone of ice cream or even something more expensive.
 
 ## Installation
 this app can be installed by importing this github repo or you can also downloaded the apk via the link below:
-
+https://drive.google.com/file/d/1Jy-oiR8GT_inNsgcutBQMex2X0brw7sa/view?usp=sharing
 
 ## Thank you for using my app
