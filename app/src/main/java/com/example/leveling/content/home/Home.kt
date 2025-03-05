@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.leveling.R
 import com.example.leveling.content.quest.QuestCardContent
 import com.example.leveling.content.quest.daily.DailyQuestCard
 import com.example.leveling.login.AuthState
@@ -49,7 +50,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 
 @Composable
-fun Home(navControllerSecondary: NavController, navControllerMain: NavController,authViewModel: LoginViewModel) {
+fun Home(navControllerSecondary: NavController, authViewModel: LoginViewModel) {
     val googleAuthClient = LoginGoogleClient(LocalContext.current)
 
     var isSignOutRequested by remember { mutableStateOf(false) }
@@ -183,7 +184,7 @@ fun Home(navControllerSecondary: NavController, navControllerMain: NavController
                 .padding(16.dp)
         ) {
             AsyncImage(
-                model = user?.photoUrl,
+                model = user?.photoUrl ?: R.drawable.placeholder_profilpic,
                 contentDescription = "Profile Picture",
                 modifier = Modifier
                     .width(100.dp)
@@ -203,7 +204,7 @@ fun Home(navControllerSecondary: NavController, navControllerMain: NavController
             )
 
             LinearProgressIndicator(
-                progress = levelProgress(),
+                progress = levelProgress() ,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
@@ -231,7 +232,7 @@ fun Home(navControllerSecondary: NavController, navControllerMain: NavController
                 )
             }
             items(todo.value) { toDo ->
-                DailyQuestCard(navControllerMain,toDo)
+                DailyQuestCard(toDo)
             }
         }
     }

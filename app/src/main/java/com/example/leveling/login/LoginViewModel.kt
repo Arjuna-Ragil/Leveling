@@ -80,17 +80,12 @@ class LoginViewModel: ViewModel() {
             }
     }
 
-    fun signup(email: String, password: String, confirmPassword: String) {
+    fun signup(email: String, password: String, name: String) {
 
         val db = Firebase.firestore
 
         if (email.isEmpty() || password.isEmpty()) {
             _authState.value = AuthState.Error("Email and password cannot be empty")
-            return
-        }
-
-        if (password != confirmPassword) {
-            _authState.value = AuthState.Error("Passwords do not match")
             return
         }
 
@@ -108,7 +103,7 @@ class LoginViewModel: ViewModel() {
                             .addOnSuccessListener { document ->
                                 if (!document.exists()) {
                                     val userData = hashMapOf(
-                                        "name" to it.displayName,
+                                        "name" to name,
                                         "email" to it.email,
                                         "profilePic" to it.photoUrl.toString(),
                                         "level" to 1,

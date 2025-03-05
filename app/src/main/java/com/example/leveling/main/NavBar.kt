@@ -3,11 +3,13 @@ package com.example.leveling.main
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
@@ -33,10 +35,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.leveling.content.home.Home
-import com.example.leveling.content.Profile
+import com.example.leveling.content.inventory.Inventory
 import com.example.leveling.content.quest.Quest
-import com.example.leveling.content.Setting
-import com.example.leveling.content.Shop
+import com.example.leveling.content.shop.Shop
 import com.example.leveling.content.quest.daily.Daily
 import com.example.leveling.content.quest.daily.ModifyDaily
 import com.example.leveling.content.quest.monthlyearly.ModifyMonthlyearly
@@ -59,13 +60,6 @@ fun NavBar(navControllerSecondary: NavController) {
             hasNews = false,
         ),
         NavbarItem(
-            title = "Profile",
-            route = "profile",
-            selectedIcon = Icons.Filled.AccountCircle,
-            unSelectedIcon = Icons.Outlined.AccountCircle,
-            hasNews = false,
-        ),
-        NavbarItem(
             title = "Quest",
             route = "quest",
             selectedIcon = Icons.Filled.Search,
@@ -80,12 +74,12 @@ fun NavBar(navControllerSecondary: NavController) {
             hasNews = false,
         ),
         NavbarItem(
-            title = "Setting",
-            route = "setting",
-            selectedIcon = Icons.Filled.Settings,
-            unSelectedIcon = Icons.Outlined.Settings,
+            title = "Inventory",
+            route = "inventory",
+            selectedIcon = Icons.Filled.AccountBox,
+            unSelectedIcon = Icons.Outlined.AccountBox,
             hasNews = false,
-        ),
+        )
     )
 
     var selectedItemIndex by rememberSaveable {
@@ -139,8 +133,7 @@ fun NavBar(navControllerSecondary: NavController) {
                 .padding(it)
         ) {
             NavHost(navController = navControllerMain, startDestination = "Home") {
-                composable("home") { Home(navControllerSecondary, navControllerMain,LoginViewModel()) }
-                composable("profile") { Profile() }
+                composable("home") { Home(navControllerSecondary, LoginViewModel()) }
                 composable("quest") { Quest(navControllerMain) }
                 composable("daily") { Daily(navControllerMain) }
                 composable("dailymodify") { ModifyDaily(navControllerMain) }
@@ -149,7 +142,7 @@ fun NavBar(navControllerSecondary: NavController) {
                 composable("monthlyearly") { Monthlyearly(navControllerMain) }
                 composable("monthlyearlymodify") { ModifyMonthlyearly(navControllerMain) }
                 composable("shop") { Shop() }
-                composable("setting") { Setting() }
+                composable("inventory") { Inventory() }
             }
         }
     }

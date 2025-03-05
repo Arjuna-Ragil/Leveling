@@ -260,7 +260,7 @@ fun SignIn(navControllerSecondary: NavHostController, navControllerLogin: NavHos
 fun SignUp(navControllerSecondary: NavHostController, navControllerLogin: NavHostController, authViewModel: LoginViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
 
     val authState = authViewModel.authState.observeAsState()
     val context = LocalContext.current
@@ -325,6 +325,14 @@ fun SignUp(navControllerSecondary: NavHostController, navControllerLogin: NavHos
             .fillMaxSize()
     ) {
         TextField(
+            value = name,
+            onValueChange = {name = it},
+            placeholder = { Text(text = "Name") },
+            singleLine = true,
+            colors = textFieldColor,
+        )
+
+        TextField(
             value = email,
             onValueChange = {email = it},
             placeholder = { Text(text = "Email") },
@@ -343,18 +351,9 @@ fun SignUp(navControllerSecondary: NavHostController, navControllerLogin: NavHos
                 .padding(vertical = 7.dp)
         )
 
-        TextField(
-            value = confirmPassword,
-            onValueChange = {confirmPassword = it},
-            placeholder = { Text(text = "Confirm Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            singleLine = true,
-            colors = textFieldColor,
-        )
-
         Button(
             onClick = {
-                authViewModel.signup(email, password, confirmPassword)
+                authViewModel.signup(email, password, name)
             },
             shape = RoundedCornerShape(50),
             modifier = Modifier

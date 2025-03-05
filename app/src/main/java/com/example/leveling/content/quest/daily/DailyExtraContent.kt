@@ -43,7 +43,7 @@ import com.google.firebase.firestore.firestore
 
 
 @Composable
-fun DailyQuestCard(navControllerMain: NavController,questCardContent: QuestCardContent) {
+fun DailyQuestCard(questCardContent: QuestCardContent) {
     var done by remember { mutableStateOf(questCardContent.done) }
     val user = Firebase.auth.currentUser
     val db = Firebase.firestore
@@ -71,7 +71,6 @@ fun DailyQuestCard(navControllerMain: NavController,questCardContent: QuestCardC
                                         "exp" to FieldValue.increment(100)
                                     ))
                                 .addOnSuccessListener {
-                                    navControllerMain.navigate("daily")
                                     Log.d("FireStore", "Money and XP have been updated")
                                 }
                                 .addOnFailureListener { e ->

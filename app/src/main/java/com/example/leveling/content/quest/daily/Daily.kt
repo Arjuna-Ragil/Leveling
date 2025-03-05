@@ -135,7 +135,7 @@ fun Daily(navControllerMain: NavController) {
 
             ) {
                 items(todo.value) { toDo ->
-                    DailyQuestCard(navControllerMain,toDo)
+                    DailyQuestCard(toDo)
                 }
             }
         }
